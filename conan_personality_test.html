@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>名侦探柯南性格测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(180deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f23 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            position: relative;
+            padding: 20px;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 15% 85%, rgba(0, 100, 200, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 15%, rgba(200, 0, 50, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(30, 60, 114, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(100, 149, 237, 0.5);
+            border-radius: 50%;
+            animation: float 12s infinite;
+            box-shadow: 0 0 8px rgba(100, 149, 237, 0.6);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            padding: 30px;
+            width: 100%;
+            max-width: 750px;
+            position: relative;
+        }
+
+        .start-screen-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .detective-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .detective-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.4), rgba(42, 82, 152, 0.3));
+            border: 2px solid rgba(100, 149, 237, 0.4);
+            animation: iconFloat 3s ease-in-out infinite;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .detective-icon:nth-child(1) { animation-delay: 0s; }
+        .detective-icon:nth-child(2) { animation-delay: 0.5s; }
+        .detective-icon:nth-child(3) { animation-delay: 1s; }
+        .detective-icon:nth-child(4) { animation-delay: 1.5s; }
+        .detective-icon:nth-child(5) { animation-delay: 2s; }
+
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .title {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #6495ed 0%, #ff4444 50%, #6495ed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            margin-bottom: 15px;
+            letter-spacing: 3px;
+            position: relative;
+            filter: drop-shadow(0 0 15px rgba(100, 149, 237, 0.4));
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+        
+        .title::after {
+            content: '名侦探柯南性格测试';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #6495ed 0%, #ff4444 50%, #6495ed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: blur(15px);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 15px rgba(100, 149, 237, 0.4));
+            }
+            50% {
+                filter: drop-shadow(0 0 30px rgba(100, 149, 237, 0.6)) drop-shadow(0 0 45px rgba(255, 68, 68, 0.3));
+            }
+        }
+
+        .subtitle-container {
+            margin-bottom: 40px;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: #b8c5d6;
+            margin-bottom: 8px;
+            opacity: 0.95;
+        }
+
+        .subtitle-detail {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.65);
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            border: 2px solid rgba(100, 149, 237, 0.5);
+            padding: 16px 55px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(30, 60, 114, 0.5),
+                        inset 0 1px 3px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .start-btn:hover::before {
+            left: 100%;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 12px 35px rgba(30, 60, 114, 0.6),
+                        inset 0 1px 3px rgba(255, 255, 255, 0.2);
+            border-color: rgba(100, 149, 237, 0.8);
+        }
+
+        .start-btn:active {
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .start-screen-footer {
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(100, 149, 237, 0.25);
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: rgba(100, 149, 237, 0.85);
+            margin: 0;
+            animation: footerGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes footerGlow {
+            0%, 100% {
+                opacity: 0.75;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .quiz-container {
+            display: none;
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.08) 0%, rgba(42, 82, 152, 0.04) 100%);
+            border-radius: 12px;
+            padding: 35px 30px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(100, 149, 237, 0.25);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(30, 60, 114, 0.1);
+        }
+
+        .quiz-header {
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6495ed, #ff4444, #6495ed);
+            background-size: 200% 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            animation: shimmer 2s linear infinite;
+            box-shadow: 0 0 8px rgba(100, 149, 237, 0.4);
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .question-number {
+            background: linear-gradient(135deg, #6495ed 0%, #ff4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .encouragement-text {
+            color: rgba(100, 149, 237, 0.85);
+            font-size: 0.85rem;
+            font-style: italic;
+            margin-bottom: 12px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .question-text {
+            color: #e8eef5;
+            font-size: 1.3rem;
+            margin-bottom: 35px;
+            line-height: 1.7;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+
+        .option {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.12) 0%, rgba(42, 82, 152, 0.06) 100%);
+            border: 2px solid rgba(100, 149, 237, 0.2);
+            padding: 16px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            color: #d4dce8;
+            font-size: 0.98rem;
+            min-height: 58px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+            overflow: visible;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(100, 149, 237, 0.08), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .option:hover {
+            background: linear-gradient(135deg, rgba(100, 149, 237, 0.18) 0%, rgba(100, 149, 237, 0.08) 100%);
+            border-color: rgba(100, 149, 237, 0.5);
+            transform: translateX(4px);
+            box-shadow: 0 4px 15px rgba(100, 149, 237, 0.15);
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, rgba(100, 149, 237, 0.28) 0%, rgba(100, 149, 237, 0.12) 100%);
+            border-color: #6495ed;
+            box-shadow: 0 0 15px rgba(100, 149, 237, 0.25), inset 0 0 8px rgba(100, 149, 237, 0.1);
+        }
+
+        .option-letter {
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 34px;
+            font-weight: bold;
+            margin-right: 14px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(30, 60, 114, 0.4);
+            border: 1px solid rgba(100, 149, 237, 0.3);
+        }
+
+        .option-feedback {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            color: #fff;
+            padding: 7px 14px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            z-index: 10;
+            animation: feedbackSlide 0.4s ease;
+            box-shadow: 0 3px 12px rgba(30, 60, 114, 0.4);
+            white-space: nowrap;
+        }
+
+        @keyframes feedbackSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(-50%) translateX(15px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(-50%) translateX(0);
+            }
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.15) 0%, rgba(42, 82, 152, 0.08) 100%);
+            border: 2px solid rgba(100, 149, 237, 0.35);
+            padding: 12px 35px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #6495ed;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(100, 149, 237, 0.15), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, rgba(100, 149, 237, 0.2) 0%, rgba(100, 149, 237, 0.1) 100%);
+            border-color: #6495ed;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(100, 149, 237, 0.25);
+        }
+
+        .nav-btn:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.4);
+        }
+
+        .nav-btn.primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 60, 114, 0.5);
+        }
+
+        .fun-tip {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 18px;
+            padding: 10px;
+            background: rgba(30, 60, 114, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(100, 149, 237, 0.15);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-container {
+            display: none;
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.1) 0%, rgba(42, 82, 152, 0.05) 100%);
+            border-radius: 12px;
+            padding: 45px 35px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(100, 149, 237, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(30, 60, 114, 0.1);
+        }
+
+        .result-type {
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, #6495ed 0%, #ff4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: 3px;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-character {
+            font-size: 3.2rem;
+            background: linear-gradient(135deg, #fff 0%, #6495ed 50%, #ff4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 0 15px rgba(100, 149, 237, 0.4));
+            animation: characterGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes characterGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 15px rgba(100, 149, 237, 0.4));
+            }
+            50% {
+                filter: drop-shadow(0 0 30px rgba(100, 149, 237, 0.6));
+            }
+        }
+
+        .personality-analysis {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.12) 0%, rgba(42, 82, 152, 0.06) 100%);
+            border: 2px solid rgba(100, 149, 237, 0.25);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: left;
+            line-height: 1.8;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(30, 60, 114, 0.1);
+        }
+
+        .personality-analysis::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #6495ed, transparent);
+        }
+
+        .personality-analysis-title {
+            background: linear-gradient(135deg, #6495ed 0%, #ff4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .personality-analysis-text {
+            color: #d4dce8;
+            font-size: 1.05rem;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
+        }
+
+        .character-intro {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.08) 0%, rgba(42, 82, 152, 0.04) 100%);
+            border: 2px solid rgba(100, 149, 237, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 35px;
+            text-align: left;
+            line-height: 1.8;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .character-intro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(100, 149, 237, 0.5), transparent);
+        }
+
+        .character-intro-title {
+            background: linear-gradient(135deg, #6495ed 0%, #ff4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .character-intro-text {
+            color: #d4dce8;
+            font-size: 1.05rem;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            border: 2px solid rgba(100, 149, 237, 0.4);
+            padding: 14px 45px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(30, 60, 114, 0.4),
+                        inset 0 1px 3px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 12px 35px rgba(30, 60, 114, 0.5),
+                        inset 0 1px 3px rgba(255, 255, 255, 0.2);
+            border-color: rgba(100, 149, 237, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 18px;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .quiz-container, .result-container {
+                padding: 22px 18px;
+            }
+
+            .question-text {
+                font-size: 1.15rem;
+                margin-bottom: 28px;
+            }
+
+            .option {
+                padding: 14px 16px;
+                font-size: 0.92rem;
+            }
+
+            .nav-btn {
+                padding: 11px 22px;
+                font-size: 0.9rem;
+            }
+
+            .result-type {
+                font-size: 1.15rem;
+            }
+
+            .result-character {
+                font-size: 2.2rem;
+            }
+
+            .personality-analysis, .character-intro {
+                padding: 18px;
+            }
+
+            .personality-analysis-title, .character-intro-title {
+                font-size: 1.05rem;
+            }
+
+            .personality-analysis-text, .character-intro-text {
+                font-size: 0.98rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.7rem;
+                letter-spacing: 2px;
+            }
+
+            .subtitle {
+                font-size: 0.98rem;
+            }
+
+            .subtitle-detail {
+                font-size: 0.88rem;
+            }
+
+            .detective-icons {
+                gap: 10px;
+                margin-bottom: 18px;
+            }
+
+            .detective-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+
+            .start-btn {
+                padding: 13px 35px;
+                font-size: 1.05rem;
+            }
+
+            .start-screen-footer {
+                margin-top: 35px;
+                padding-top: 18px;
+            }
+
+            .footer-text {
+                font-size: 0.82rem;
+            }
+
+            .result-character {
+                font-size: 1.9rem;
+            }
+
+            .option {
+                padding: 13px 15px;
+                font-size: 0.9rem;
+            }
+
+            .option-letter {
+                width: 30px;
+                height: 30px;
+                line-height: 30px;
+                margin-right: 12px;
+            }
+
+            .encouragement-text {
+                font-size: 0.78rem;
+            }
+
+            .fun-tip {
+                font-size: 0.72rem;
+                padding: 8px;
+            }
+
+            .option-feedback {
+                font-size: 0.72rem;
+                padding: 5px 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <div id="start-screen">
+            <div class="start-screen-content">
+                <div class="detective-icons">
+                    <div class="detective-icon">🔍</div>
+                    <div class="detective-icon">🎩</div>
+                    <div class="detective-icon">🔬</div>
+                    <div class="detective-icon">💡</div>
+                    <div class="detective-icon">🎭</div>
+                </div>
+                <h1 class="title">名侦探柯南性格测试</h1>
+                <div class="subtitle-container">
+                    <p class="subtitle">探索你与哪位角色最相似</p>
+                    <p class="subtitle-detail">通过精心设计的问题，发现你的侦探特质</p>
+                </div>
+                <button class="start-btn" onclick="startSurvey()">开始测试</button>
+                <div class="start-screen-footer">
+                    <p class="footer-text">🔍 真相只有一个！</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="quiz-screen" class="quiz-container">
+            <div class="quiz-header">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="question-number" id="question-number"></div>
+                <div class="encouragement-text" id="encouragement-text"></div>
+            </div>
+            <div class="question-text" id="question-text"></div>
+            <div class="options" id="options"></div>
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prev-btn" onclick="prevQuestion()">上一题</button>
+                <button class="nav-btn primary" id="next-btn" onclick="nextQuestion()">下一题</button>
+            </div>
+            <div class="fun-tip" id="fun-tip"></div>
+        </div>
+
+        <div id="result-screen" class="result-container">
+            <div class="result-type" id="result-type"></div>
+            <div class="result-character" id="result-character"></div>
+            <div class="personality-analysis" id="personality-analysis"></div>
+            <div class="character-intro" id="character-intro"></div>
+            <button class="restart-btn" onclick="restartSurvey()">重新测试</button>
+        </div>
+    </div>
+
+    <script>
+        // 题目数据
+        const questions = [
+            {
+                text: "当你发现一个谜题时，你的第一反应是？",
+                options: [
+                    "冷静分析，寻找线索",
+                    "立即行动，实地调查",
+                    "寻求他人帮助，共同解决",
+                    "保持警惕，观察周围环境"
+                ]
+            },
+            {
+                text: "面对复杂的案件，你的推理方式是？",
+                options: [
+                    "逻辑推理，排除法",
+                    "直觉判断，灵感闪现",
+                    "收集证据，逐步验证",
+                    "观察细节，发现矛盾"
+                ]
+            },
+            {
+                text: "在团队中，你更倾向于扮演什么角色？",
+                options: [
+                    "领导者，指挥调查",
+                    "执行者，收集情报",
+                    "辅助者，提供支持",
+                    "独立者，单独行动"
+                ]
+            },
+            {
+                text: "当你发现有人需要帮助时，你会？",
+                options: [
+                    "理性评估情况后再行动",
+                    "毫不犹豫地伸出援手",
+                    "先确保自己的安全",
+                    "观察对方是否值得帮助"
+                ]
+            },
+            {
+                text: "你如何看待真相？",
+                options: [
+                    "真相只有一个，必须查明",
+                    "真相有时会伤人，需要谨慎",
+                    "真相是相对的，取决于视角",
+                    "真相不重要，结果才重要"
+                ]
+            },
+            {
+                text: "在面对危险时，你的反应是？",
+                options: [
+                    "冷静应对，寻找解决方案",
+                    "勇敢面对，保护他人",
+                    "谨慎行事，避免冲突",
+                    "利用智慧，化解危机"
+                ]
+            },
+            {
+                text: "你更看重哪种品质？",
+                options: [
+                    "智慧和推理能力",
+                    "勇气和正义感",
+                    "善良和同情心",
+                    "独立和自由"
+                ]
+            },
+            {
+                text: "你对待敌人的态度是？",
+                options: [
+                    "理解他们的动机，寻求和平解决",
+                    "毫不留情，将他们绳之以法",
+                    "给予改过自新的机会",
+                    "冷漠对待，只关注自己的目标"
+                ]
+            },
+            {
+                text: "在调查中，你最喜欢的时刻是？",
+                options: [
+                    "解开谜题，发现真相",
+                    "追捕犯人，伸张正义",
+                    "帮助他人，解决困难",
+                    "独自调查，发现秘密"
+                ]
+            },
+            {
+                text: "你希望自己成为什么样的人？",
+                options: [
+                    "智慧的侦探",
+                    "正义的守护者",
+                    "温暖的伙伴",
+                    "自由的灵魂"
+                ]
+            },
+            {
+                text: "遇到困难时，你的第一反应是？",
+                options: [
+                    "分析问题，寻找解决方案",
+                    "立即行动，尝试突破",
+                    "寻求他人的帮助",
+                    "暂时放弃，等待时机"
+                ]
+            },
+            {
+                text: "你更喜欢哪种类型的案件？",
+                options: [
+                    "密室推理，逻辑谜题",
+                    "追捕行动，紧张刺激",
+                    "帮助他人，解决纠纷",
+                    "神秘事件，探索未知"
+                ]
+            },
+            {
+                text: "在压力下，你的表现是？",
+                options: [
+                    "保持冷静，理性思考",
+                    "变得紧张，但依然勇敢",
+                    "激发潜能，表现更好",
+                    "寻求帮助，共同应对"
+                ]
+            },
+            {
+                text: "你如何看待规则和法律？",
+                options: [
+                    "遵守规则，维护正义",
+                    "灵活变通，根据情况调整",
+                    "挑战规则，追求真相",
+                    "利用规则，为自己谋利"
+                ]
+            },
+            {
+                text: "当朋友遇到困难时，你会？",
+                options: [
+                    "理性分析，给出建议",
+                    "全力支持，不离不弃",
+                    "鼓励对方，给予信心",
+                    "默默陪伴，提供安慰"
+                ]
+            },
+            {
+                text: "你更喜欢哪种调查方式？",
+                options: [
+                    "逻辑推理，寻找矛盾",
+                    "实地调查，收集证据",
+                    "询问证人，了解情况",
+                    "暗中观察，发现秘密"
+                ]
+            },
+            {
+                text: "面对未知的风险，你会？",
+                options: [
+                    "谨慎评估，做好充分准备",
+                    "勇敢面对，接受挑战",
+                    "寻求伙伴，共同冒险",
+                    "回避风险，选择安全路径"
+                ]
+            },
+            {
+                text: "你如何看待失败？",
+                options: [
+                    "从失败中学习，不断进步",
+                    "接受失败，继续前进",
+                    "不甘失败，更加努力",
+                    "避免失败，谨慎行事"
+                ]
+            },
+            {
+                text: "在社交场合中，你更倾向于？",
+                options: [
+                    "倾听他人，观察环境",
+                    "主动交流，建立联系",
+                    "保持低调，不引人注意",
+                    "展示自己，获得认可"
+                ]
+            },
+            {
+                text: "你如何处理与他人的冲突？",
+                options: [
+                    "理性沟通，寻求共识",
+                    "坚持己见，据理力争",
+                    "退让妥协，维护关系",
+                    "避免冲突，保持距离"
+                ]
+            },
+            {
+                text: "面对新的挑战，你的态度是？",
+                options: [
+                    "兴奋期待，充满动力",
+                    "谨慎小心，做好准备",
+                    "冷静分析，评估风险",
+                    "有些担忧，但会尝试"
+                ]
+            },
+            {
+                text: "你更看重哪种能力？",
+                options: [
+                    "推理和洞察力",
+                    "战斗和行动力",
+                    "沟通和理解力",
+                    "观察和感知力"
+                ]
+            },
+            {
+                text: "在团队协作中，你更擅长？",
+                options: [
+                    "统筹规划，分配任务",
+                    "冲锋陷阵，承担责任",
+                    "辅助支持，提供帮助",
+                    "独立行动，完成任务"
+                ]
+            },
+            {
+                text: "你如何看待正义？",
+                options: [
+                    "正义必须伸张，不容妥协",
+                    "正义需要智慧来实现",
+                    "正义是保护弱者的力量",
+                    "正义是相对的概念"
+                ]
+            },
+            {
+                text: "面对诱惑时，你会？",
+                options: [
+                    "理性分析，权衡利弊",
+                    "坚定立场，拒绝诱惑",
+                    "谨慎考虑，避免陷阱",
+                    "跟随内心，做出选择"
+                ]
+            },
+            {
+                text: "你更喜欢哪种环境？",
+                options: [
+                    "安静祥和，适合思考",
+                    "热闹繁华，充满活力",
+                    "神秘未知，充满探索",
+                    "自由开放，无拘无束"
+                ]
+            },
+            {
+                text: "当他人不理解你时，你会？",
+                options: [
+                    "耐心解释，寻求理解",
+                    "坚持自我，不在意他人",
+                    "反思自己，考虑改变",
+                    "保持沉默，让时间证明"
+                ]
+            },
+            {
+                text: "你如何看待冒险？",
+                options: [
+                    "冒险是成长的机会",
+                    "冒险是必要的挑战",
+                    "冒险是未知的危险",
+                    "冒险是自由的象征"
+                ]
+            },
+            {
+                text: "在紧急情况下，你的反应是？",
+                options: [
+                    "冷静分析，快速决策",
+                    "立即行动，应对危机",
+                    "寻求帮助，共同解决",
+                    "保持镇定，等待时机"
+                ]
+            },
+            {
+                text: "你如何对待承诺？",
+                options: [
+                    "认真对待，绝不违背",
+                    "灵活处理，根据情况",
+                    "谨慎承诺，避免负担",
+                    "尽力而为，不强求完美"
+                ]
+            },
+            {
+                text: "面对批评时，你会？",
+                options: [
+                    "虚心接受，认真反思",
+                    "理性分析，有则改之",
+                    "保持冷静，不轻易改变",
+                    "感到受伤，但会改进"
+                ]
+            },
+            {
+                text: "你更喜欢哪种学习方式？",
+                options: [
+                    "系统学习，深入理解",
+                    "实践操作，边做边学",
+                    "观察模仿，跟随他人",
+                    "自主探索，发现规律"
+                ]
+            },
+            {
+                text: "在团队合作中，你最讨厌？",
+                options: [
+                    "沟通不畅，信息不透明",
+                    "责任不清，推诿扯皮",
+                    "效率低下，浪费时间",
+                    "缺乏信任，互相猜疑"
+                ]
+            },
+            {
+                text: "你如何看待成功？",
+                options: [
+                    "成功是努力的结果",
+                    "成功是机遇的把握",
+                    "成功是团队的胜利",
+                    "成功是自我价值的实现"
+                ]
+            },
+            {
+                text: "面对不公平时，你会？",
+                options: [
+                    "理性抗争，寻求公正",
+                    "默默忍受，等待时机",
+                    "积极改变，改善现状",
+                    "远离环境，寻找新的机会"
+                ]
+            },
+            {
+                text: "你更喜欢哪种休息方式？",
+                options: [
+                    "安静独处，整理思绪",
+                    "与朋友聚会，放松心情",
+                    "探索新事物，保持新鲜",
+                    "休息调整，准备下次挑战"
+                ]
+            },
+            {
+                text: "在决策时，你最看重？",
+                options: [
+                    "逻辑和理性",
+                    "直觉和感觉",
+                    "他人的建议",
+                    "长远的影响"
+                ]
+            },
+            {
+                text: "你如何看待责任？",
+                options: [
+                    "责任是必须承担的",
+                    "责任是相互分担的",
+                    "责任是有限度的",
+                    "责任是自愿选择的"
+                ]
+            },
+            {
+                text: "面对变化时，你会？",
+                options: [
+                    "积极适应，拥抱变化",
+                    "谨慎观察，评估影响",
+                    "保持稳定，维持现状",
+                    "主动引导，控制变化"
+                ]
+            },
+            {
+                text: "你如何处理压力？",
+                options: [
+                    "分解问题，逐步解决",
+                    "寻求支持，共同承担",
+                    "暂时逃避，缓解压力",
+                    "直面挑战，突破压力"
+                ]
+            },
+            {
+                text: "在人际关系中，你更看重？",
+                options: [
+                    "真诚和信任",
+                    "互相帮助和支持",
+                    "共同成长和进步",
+                    "独立和自由"
+                ]
+            },
+            {
+                text: "面对目标时，你的态度是？",
+                options: [
+                    "制定计划，稳步推进",
+                    "全力以赴，追求完美",
+                    "灵活调整，适应变化",
+                    "保持耐心，等待时机"
+                ]
+            },
+            {
+                text: "你如何看待团队合作？",
+                options: [
+                    "团队是力量的源泉",
+                    "团队是责任的分担",
+                    "团队是成长的平台",
+                    "团队是必要的妥协"
+                ]
+            },
+            {
+                text: "面对困难的选择时，你会？",
+                options: [
+                    "收集信息，充分分析",
+                    "咨询他人，听取意见",
+                    "相信直觉，快速决定",
+                    "等待时机，观察发展"
+                ]
+            },
+            {
+                text: "你如何看待自己的能力？",
+                options: [
+                    "能力需要不断学习和提升",
+                    "能力是天生的，需要发挥",
+                    "能力有限，需要接受现实",
+                    "能力是无限的，只要努力"
+                ]
+            },
+            {
+                text: "在休闲时间，你更喜欢？",
+                options: [
+                    "阅读学习，充实自己",
+                    "运动健身，保持活力",
+                    "社交聚会，结交朋友",
+                    "独处思考，享受宁静"
+                ]
+            },
+            {
+                text: "面对竞争时，你会？",
+                options: [
+                    "全力以赴，争取胜利",
+                    "享受过程，不计较结果",
+                    "学习对手，提升自己",
+                    "保持冷静，发挥最佳水平"
+                ]
+            },
+            {
+                text: "你如何看待创新？",
+                options: [
+                    "创新是进步的动力",
+                    "创新是必要的尝试",
+                    "创新有风险，需要谨慎",
+                    "创新是突破常规的机会"
+                ]
+            },
+            {
+                text: "在帮助他人时，你更倾向于？",
+                options: [
+                    "提供方法，授人以渔",
+                    "直接帮助，解决困难",
+                    "鼓励支持，给予信心",
+                    "陪伴引导，共同成长"
+                ]
+            },
+            {
+                text: "你如何看待时间？",
+                options: [
+                    "时间就是生命，必须珍惜",
+                    "时间是工具，需要合理利用",
+                    "时间充裕，不必着急",
+                    "时间不重要，享受当下"
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(undefined);
+
+        // 鼓励语句
+        const encouragements = [
+            "相信自己的推理能力！",
+            "每个选择都代表着真实的你~",
+            "继续探索真相吧！",
+            "你的侦探特质正在逐渐显现...",
+            "跟着直觉走，真相就在那里！",
+            "每一次选择都是自我发现！",
+            "保持冷静，真相只有一个！",
+            "调查的旅程还在继续！",
+            "你的独特之处正在发光！",
+            "相信自己，你比想象中更强大！"
+        ];
+
+        // 趣味提示
+        const funTips = [
+            "💡 小知识：柯南的真实身份是高中生侦探工藤新一！",
+            "💡 小知识：毛利兰是空手道高手，曾多次救柯南于危难！",
+            "💡 小知识：灰原哀是前黑衣组织成员，研制了APTX4869！",
+            "💡 小知识：怪盗基德的真实身份是黑羽快斗！",
+            "💡 小知识：服部平次是关西的高中生侦探，与柯南是好友！",
+            "💡 小知识：阿笠博士为少年侦探团发明了许多道具！",
+            "💡 小知识：铃木园子是毛利兰的闺蜜，性格开朗活泼！",
+            "💡 小知识：毛利小五郎虽然看似糊涂，但   关键时刻也很可靠！",
+            "💡 小知识：目暮警官是警视厅搜查一课的警部！",
+            "💡 小知识：少年侦探团由柯南、元太、光彦、步美组成！"
+        ];
+
+        // 答题反馈
+        const optionFeedbacks = [
+            "不错的推理！",
+            "很有见地！",
+            "这个答案很有趣！",
+            "深思熟虑的决定！",
+            "独特的视角！",
+            "充满智慧的选择！"
+        ];
+
+        // 性格类型和角色
+        const charactersByType = {
+            "智慧推理型": ["江户川柯南", "灰原哀", "服部平次", "工藤新一", "阿笠博士", "妃英理"],
+            "正义勇敢型": ["毛利兰", "毛利小五郎", "目暮警官", "高木警官", "京极真", "佐藤警官"],
+            "温柔善良型": ["铃木园子", "吉田步美", "小岛元太", "圆谷光彦", "远山和叶", "世良真纯"],
+            "神秘独立型": ["怪盗基德", "琴酒", "贝尔摩德", "赤井秀一", "安室透", "冲矢昴"]
+        };
+
+        const typeMapping = {
+            0: "智慧推理型",
+            1: "正义勇敢型",
+            2: "温柔善良型",
+            3: "神秘独立型"
+        };
+
+        const personalityAnalyses = {
+            "智慧推理型": "你是一个理性、冷静、善于思考的人。你拥有敏锐的洞察力和强大的推理能力，总是能在复杂的局面中找到真相。你追求知识和真理，对自己和他人都有较高的要求。在面对困难时，你总是能保持冷静，用智慧解决问题。你的座右铭是：真相只有一个！",
+            "正义勇敢型": "你是一个热情、勇敢、充满正义感的人。你有着强烈的责任感和使命感，总是愿意为了保护他人而挺身而出。你重情义、讲义气，对朋友真诚坦率。在面对危险时，你从不退缩，总是勇敢地站在最前线。你的座右铭是：正义必胜！",
+            "温柔善良型": "你是一个善良、温柔、富有同理心的人。你敏感细腻，善于察觉他人的情绪变化，总是能在别人需要的时候给予温暖和安慰。你重视友情和亲情，愿意为了所爱的人付出。你是一个非常好的倾听者和陪伴者，总是能给周围的人带来快乐。你的座右铭是：友情万岁！",
+            "神秘独立型": "你是一个独立、神秘、有主见的人。你喜欢独处，享受内心的宁静，不喜欢被世俗的规则和他人的看法所束缚。你有自己独特的价值观和生活方式，虽然外表看起来有些疏离，但内心其实有着自己的坚持和温柔。你的座右铭是：自由至上！"
+        };
+
+        const characterIntros = {
+            "江户川柯南": "外表看似小孩，智慧却过于常人。真实身份是高中生侦探工藤新一，因被黑衣组织灌下APTX4869而身体缩小。他拥有敏锐的洞察力和强大的推理能力，总是能在关键时刻解开谜题，找出真相。",
+            "灰原哀": "前黑衣组织科学家，原名宫野志保，代号雪莉。她研制了APTX4869，后因背叛组织而身体缩小。她性格冷淡，但内心善良，是柯南最重要的伙伴之一。",
+            "服部平次": "关西的高中生侦探，大阪府警本部长服部平藏的儿子。他皮肤黝黑，性格热血，与柯南是好友兼竞争对手。他擅长剑道，推理能力与柯南不相上下。",
+            "工藤新一": "高中生侦探，被誉为日本警察的救世主。他拥有敏锐的洞察力和强大的推理能力，崇拜福尔摩斯。因被黑衣组织灌下APTX4869而身体缩小，化名江户川柯南。",
+            "毛利兰": "毛利小五郎的女儿，工藤新一的青梅竹马。她是空手道高手，性格温柔善良，有着强烈的正义感。她一直在等待新一的归来，不知道柯南就是新一。",
+            "毛利小五郎": "毛利兰的父亲，前刑警，现在是私家侦探。他看似糊涂，经常被柯南用麻醉针射昏后破案，但在关键时刻也会展现出可靠的一面，特别是涉及到家人安全时。",
+            "目暮警官": "警视厅搜查一课的警部，经常与柯南等人合作破案。他性格正直，重视团队合作，是警方的中坚力量。他总是戴着帽子，据说是因为头上有伤疤。",
+            "高木警官": "警视厅搜查一课的刑警，性格温和善良，对佐藤警官有好感。他虽然年轻，但在办案时非常认真负责，是目暮警官的得力助手。",
+            "铃木园子": "铃木财团的二小姐，毛利兰的闺蜜。她性格开朗活泼，喜欢帅哥，经常邀请小兰参加各种活动。她虽然有时大大咧咧，但对朋友非常真诚。",
+            "吉田步美": "少年侦探团的成员，性格活泼可爱，喜欢柯南。她虽然年纪小，但非常勇敢，经常在案件中发挥重要作用。她善良纯真，是团队中的开心果。",
+            "小岛元太": "少年侦探团的成员，性格直爽，喜欢吃鳗鱼饭。他虽然有时冲动，但非常讲义气，是团队中的力量担当。他勇敢无畏，总是冲在最前面。",
+            "圆谷光彦": "少年侦探团的成员，性格理性，喜欢科学。他是团队中的智囊，经常用科学知识帮助破案。他聪明好学，对未来有着明确的规划。",
+            "怪盗基德": "神出鬼没的怪盗绅士，真实身份是高中生黑羽快斗。他擅长魔术和易容，总是能在众目睽睽之下盗取宝石，然后又神秘消失。他与柯南既是敌人也是朋友。",
+            "琴酒": "黑衣组织的高级成员，代号Gin。他性格冷酷无情，是杀害工藤新一的凶手。他总是穿着黑色风衣，开着一辆保时捷356A，是组织中最危险的人物之一。",
+            "贝尔摩德": "黑衣组织的高级成员，真实身份是美国女演员莎朗·温亚德。她性格神秘，既冷酷又优雅，与柯南有着复杂的关系。她知道柯南的真实身份，但选择保守秘密。",
+            "赤井秀一": "FBI搜查官，代号Rye。他曾经潜入黑衣组织，代号黑麦威士忌。他性格冷静，枪法精准，被称为银色子弹。他假死后化名冲矢昴，继续保护灰原哀。",
+            "京极真": "杯户高中空手道部主将，全日本空手道冠军。他性格正直，有着超强的战斗力，是园子的男朋友。他虽然外表严肃，但对园子非常温柔体贴。",
+            "佐藤警官": "警视厅搜查一课的警部补，被称为警视厅之花。她性格坚强，有着强烈的正义感，是警界的精英。她与高木警官有着微妙的感情。",
+            "千叶警官": "警视厅搜查一课的刑警，身材较胖，性格温和。他是高木警官的好友，虽然看起来有些迟钝，但在关键时刻也很可靠。",
+            "阿笠博士": "天才发明家，柯南最信任的伙伴。他为柯南发明了许多道具，如手表型麻醉枪、脚力增强鞋等。他性格和蔼，喜欢讲冷笑话。",
+            "妃英理": "毛利小五郎的妻子，毛利兰的母亲。她是日本第一的女律师，被称为律政界的女王。她性格冷静理智，与小五郎分居但彼此关心。",
+            "白鸟警官": "警视厅搜查一课的警部，出身名门。他性格优雅，有着良好的教养，对佐藤警官有好感。他是少年侦探团的支持者。",
+            "绫小路警官": "京都府警的警部，被称为贵族警部。他性格沉稳，有着独特的推理方式，与服部平次是好友。他总是带着一只松鼠。",
+            "远山和叶": "服部平次的青梅竹马，擅长合气道。她性格活泼开朗，与平次是欢喜冤家。她虽然有时任性，但非常关心平次。",
+            "世良真纯": "转学到帝丹高中的女高中生，真实身份是赤井秀一的妹妹。她性格豪爽，擅长截拳道，对柯南很感兴趣。",
+            "宫本由美": "警视厅交通部的女警，佐藤警官的好友。她性格开朗，喜欢撮合佐藤和高木，是警视厅的恋爱顾问。",
+            "三池苗子": "警视厅交通部的女警，千叶警官的青梅竹马。她性格温柔，对千叶警官有好感，但一直没有表白。",
+            "冲矢昴": "东都大学的研究生，真实身份是赤井秀一。他性格温和，擅长推理和料理，借住在工藤家保护灰原哀。",
+            "安室透": "波洛咖啡厅的服务生，真实身份是公安警察降谷零。他性格神秘，有着多重身份，是黑衣组织的卧底。",
+            "风见裕也": "公安警察，降谷零的下属。他性格认真，对降谷非常忠诚，协助他执行各种秘密任务。",
+            "詹姆斯·布莱克": "FBI的高级探员，赤井秀一的上司。他性格沉稳，有着丰富的办案经验，是FBI在日本行动的指挥官。"
+        };
+
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        function startSurvey() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('quiz-screen').style.display = 'block';
+            lastMilestone = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('question-number').textContent = `第 ${currentQuestion + 1}/${questions.length} 题`;
+            document.getElementById('question-text').textContent = q.text;
+            
+            const encouragementText = document.getElementById('encouragement-text');
+            encouragementText.textContent = encouragements[currentQuestion % encouragements.length];
+            
+            const funTip = document.getElementById('fun-tip');
+            funTip.textContent = funTips[currentQuestion % funTips.length];
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            const letters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                if (answers[currentQuestion] === idx) {
+                    optionDiv.classList.add('selected');
+                }
+                optionDiv.innerHTML = `<span class="option-letter">${letters[idx]}</span>${opt}`;
+                optionDiv.onclick = () => selectOption(idx);
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            updateProgress();
+            updateButtons();
+        }
+
+        function selectOption(idx) {
+            answers[currentQuestion] = idx;
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, i) => {
+                opt.classList.toggle('selected', i === idx);
+            });
+            
+            showOptionFeedback(idx);
+            
+            options[idx].style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                options[idx].style.transform = '';
+            }, 150);
+        }
+
+        function showOptionFeedback(selectedIdx) {
+            const existingFeedback = document.querySelectorAll('.option-feedback');
+            existingFeedback.forEach(el => el.remove());
+            
+            const options = document.querySelectorAll('.option');
+            const selectedOption = options[selectedIdx];
+            if (!selectedOption) return;
+            
+            const feedback = document.createElement('div');
+            feedback.className = 'option-feedback';
+            feedback.textContent = optionFeedbacks[Math.floor(Math.random() * optionFeedbacks.length)];
+            selectedOption.appendChild(feedback);
+            
+            setTimeout(() => {
+                if (feedback.parentNode) {
+                    feedback.style.opacity = '0';
+                    feedback.style.transition = 'opacity 0.3s ease';
+                    setTimeout(() => feedback.remove(), 300);
+                }
+            }, 1500);
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            
+            const milestones = [10, 25, 50, 75, 90, 100];
+            const milestoneMessages = {
+                10: "🔍 已完成10%！调查刚刚开始~",
+                25: "🔍 已完成25%！继续加油，侦探！",
+                50: "🔍 已经完成一半了！真相越来越近了！",
+                75: "🔍 75%完成！再坚持一下就能破案了！",
+                90: "🔍 90%完成！马上就能揭晓结果了！",
+                100: "🔍 全部完成！准备揭晓你的角色吧！"
+            };
+            
+            const currentProgress = Math.round(progress);
+            if (milestones.includes(currentProgress) && currentProgress > 0) {
+                showMilestoneToast(milestoneMessages[currentProgress]);
+            }
+        }
+
+        let lastMilestone = 0;
+        function showMilestoneToast(message) {
+            const progress = Math.round(((currentQuestion + 1) / questions.length) * 100);
+            if (progress === lastMilestone) return;
+            lastMilestone = progress;
+            
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, rgba(30, 144, 255, 0.95), rgba(220, 20, 60, 0.95));
+                color: #fff;
+                padding: 20px 40px;
+                border-radius: 15px;
+                font-weight: bold;
+                font-size: 1.2rem;
+                z-index: 2000;
+                animation: milestonePop 0.5s ease;
+                box-shadow: 0 15px 40px rgba(30, 144, 255, 0.5);
+                text-align: center;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'fadeIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        function updateButtons() {
+            document.getElementById('prev-btn').disabled = currentQuestion === 0;
+            const nextBtn = document.getElementById('next-btn');
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.textContent = '完成测试';
+            } else {
+                nextBtn.textContent = '下一题';
+            }
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestion] === undefined) {
+                alert('请先选择一个选项！');
+                return;
+            }
+
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                finishSurvey();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        function finishSurvey() {
+            const optionCounts = [0, 0, 0, 0];
+            
+            for (let i = 0; i < questions.length; i++) {
+                if (answers[i] !== undefined) {
+                    optionCounts[answers[i]]++;
+                }
+            }
+            
+            let maxCount = -1;
+            let maxIndex = 0;
+            for (let i = 0; i < optionCounts.length; i++) {
+                if (optionCounts[i] > maxCount) {
+                    maxCount = optionCounts[i];
+                    maxIndex = i;
+                }
+            }
+            
+            const type = typeMapping[maxIndex];
+            const characters = charactersByType[type];
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            const character = characters[randomIndex];
+            
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('result-type').textContent = type;
+            document.getElementById('result-character').textContent = character;
+            
+            const analysisDiv = document.getElementById('personality-analysis');
+            const analysis = personalityAnalyses[type] || "暂无分析";
+            analysisDiv.innerHTML = `
+                <div class="personality-analysis-title">你的性格分析</div>
+                <div class="personality-analysis-text">${analysis}</div>
+            `;
+            
+            const introDiv = document.getElementById('character-intro');
+            const intro = characterIntros[character] || "暂无介绍";
+            introDiv.innerHTML = `
+                <div class="character-intro-title">角色介绍</div>
+                <div class="character-intro-text">${intro}</div>
+            `;
+        }
+
+        function restartSurvey() {
+            currentQuestion = 0;
+            answers = new Array(questions.length).fill(undefined);
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'block';
+        }
+
+        createParticles();
+    </script>
+</body>
+</html>
